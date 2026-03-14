@@ -1,4 +1,4 @@
-import { AuthResponse, Channel, Stats, ChannelAnalytics, CronJob, PostLog, Post, DailyMetric, RunError } from "../types";
+import { AuthResponse, Channel, Stats, ChannelAnalytics, CronJob, PostLog, Post, DailyMetric, RunError , Paginated, User} from "../types";
 
 const API_BASE_URL = "http://localhost:8000/api";
 
@@ -64,8 +64,23 @@ class ApiService {
       }
     }
 
+
+
+    // If still unauthorized after refresh attempt, clear auth to trigger route guards.
+    if (response.status === 401) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("refresh");
+      localStorage.removeItem("user");
+    }
     if (!response.ok) {
-      const message = data?.error || data?.message || response.statusText || "API request failed";
+      const message =
+        (typeof data === "string" && data) ||
+        data?.detail ||
+        data?.error ||
+        data?.message ||
+        (data && typeof data === "object" && Array.isArray((Object.values(data)[0] as any)) && (Object.values(data)[0] as any)[0]) ||
+        response.statusText ||
+        "API request failed";
       throw new Error(message);
     }
 
@@ -86,6 +101,25 @@ class ApiService {
       body: JSON.stringify(credentials),
     }, true);
   }
+
+  async getMe(): Promise<User> {
+    return this.request<User>("/auth/me/");
+  }
+
+  async updateMe(payload: { name?: string }): Promise<User> {
+    return this.request<User>("/auth/me/", {
+      method: "PATCH",
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async changePassword(payload: { current_password: string; new_password: string }): Promise<{ ok: boolean }> {
+    return this.request<{ ok: boolean }>("/auth/change-password/", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+  }
+
 
   // Channels
   async getChannels(): Promise<Channel[]> {
@@ -158,12 +192,12 @@ class ApiService {
     });
   }
 
-  async getPostLogs(channelId: number): Promise<PostLog[]> {
-    return this.request<PostLog[]>(`/channels/${channelId}/post_logs/`);
+  async getPostLogs(channelId: number, page = 1, pageSize = 20): Promise<Paginated<PostLog>> {
+    return this.request<Paginated<PostLog>>(`/channels/${channelId}/post_logs/?page=${page}&page_size=${pageSize}`);
   }
 
-  async getPosts(channelId: number): Promise<Post[]> {
-    return this.request<Post[]>(`/channels/${channelId}/posts/`);
+  async getPosts(channelId: number, page = 1, pageSize = 20): Promise<Paginated<Post>> {
+    return this.request<Paginated<Post>>(`/channels/${channelId}/posts/?page=${page}&page_size=${pageSize}`);
   }
 
   // Analytics

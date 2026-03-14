@@ -232,8 +232,8 @@ export const AnalyticsPage: React.FC = () => {
                         contentStyle={{ background: "#0b1220", border: "1px solid #1f2937", borderRadius: 12 }}
                         labelStyle={{ color: "#e2e8f0" }}
                       />
-                      <Line type="monotone" dataKey="posts_published" stroke="#22c55e" strokeWidth={2} dot={false} name="Posts" />
-                      <Line type="monotone" dataKey="runs_failed" stroke="#ef4444" strokeWidth={2} dot={false} name="Fails" />
+                      <Line type="monotone" dataKey="posts_published" stroke="#22c55e" strokeWidth={2} dot={false} name={t("analytics.posts_line")} />
+                      <Line type="monotone" dataKey="runs_failed" stroke="#ef4444" strokeWidth={2} dot={false} name={t("analytics.fails_line")} />
                     </LineChart>
                   </ResponsiveContainer>
                 )}
@@ -242,12 +242,12 @@ export const AnalyticsPage: React.FC = () => {
 
             <Card className="border-slate-800 bg-slate-900/50">
               <CardHeader>
-                <CardTitle className="text-white">Top categories</CardTitle>
+                <CardTitle className="text-white">{t("analytics.top_categories")}</CardTitle>
               </CardHeader>
               <CardContent className="h-72">
                 {categories.length === 0 ? (
                   <div className="flex items-center justify-center h-full text-slate-500 border-2 border-dashed border-slate-800 rounded-xl bg-slate-950/50">
-                    Hozircha category yo'q
+                    {t("analytics.no_categories")}
                   </div>
                 ) : (
                   <ResponsiveContainer width="100%" height="100%">
@@ -270,12 +270,12 @@ export const AnalyticsPage: React.FC = () => {
           <Card className="border-slate-800 bg-slate-900/50">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-white flex items-center gap-2">
-                <TriangleAlert size={18} className="text-amber-400" /> Recent errors
+                <TriangleAlert size={18} className="text-amber-400" /> {t("analytics.recent_errors")}
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               {errors.length === 0 ? (
-                <div className="p-6 text-slate-400">Xatoliklar yo'q</div>
+                <div className="p-6 text-slate-400">{t("analytics.no_errors")}</div>
               ) : (
                 <div className="divide-y divide-slate-800">
                   {errors.map((e) => (

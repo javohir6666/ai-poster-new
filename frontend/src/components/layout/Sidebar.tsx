@@ -58,12 +58,12 @@ export const Sidebar: React.FC = () => {
       <div className="p-4 mt-auto">
         <div className="mb-4 p-4 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/10 rounded-full blur-xl"></div>
-          <h4 className="text-sm font-bold text-white mb-1">Pro Tarif</h4>
-          <p className="text-xs text-slate-400 mb-3">Cheksiz imkoniyatlar</p>
+          <h4 className="text-sm font-bold text-white mb-1">{t('sidebar.pro_title')}</h4>
+          <p className="text-xs text-slate-400 mb-3">{t('sidebar.pro_desc')}</p>
           <div className="w-full bg-slate-800 rounded-full h-1.5 mb-2">
             <div className="bg-indigo-500 h-1.5 rounded-full" style={{ width: '45%' }}></div>
           </div>
-          <p className="text-[10px] text-slate-500">45% limit ishlatildi</p>
+          <p className="text-[10px] text-slate-500">{t('sidebar.limit_used', { pct: 45 })}</p>
         </div>
         
         <button

@@ -23,6 +23,7 @@ from .cron import compute_next_run
 from .services.ai import generate_text
 from .services.runner import run_cron_job
 from posts.models import Post
+from posts.pagination import StandardResultsSetPagination
 
 class ChannelViewSet(viewsets.ModelViewSet):
     serializer_class = ChannelSerializer
@@ -355,6 +356,7 @@ class CronJobViewSet(viewsets.ModelViewSet):
 
 class PostLogViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PostLogSerializer
+    pagination_class = StandardResultsSetPagination
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):

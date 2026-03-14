@@ -1,19 +1,24 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Plus, RefreshCw, Trash2 } from "lucide-react";
 import { api } from "../../services/api";
-import { Channel, CronJob, PostLog } from "../../types";
+import { Channel, CronJob, Paginated, PostLog } from "../../types";
 import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
-import { Input } from "../../components/ui/Input";
 import { SEO } from "../../components/seo/SEO";
 import { useTranslation } from "react-i18next";
+import { PaginationControls } from "../../components/ui/PaginationControls";
+import { useToast } from "../../context/ToastContext";
+
+const LOGS_PAGE_SIZE = 20;
 
 export const AutomationPage: React.FC = () => {
   const { t } = useTranslation();
+  const toast = useToast();
   const [channels, setChannels] = useState<Channel[]>([]);
   const [selectedChannelId, setSelectedChannelId] = useState<number | null>(null);
   const [cronJobs, setCronJobs] = useState<CronJob[]>([]);
-  const [postLogs, setPostLogs] = useState<PostLog[]>([]);
+  const [postLogsPage, setPostLogsPage] = useState(1);
+  const [postLogsResp, setPostLogsResp] = useState<Paginated<PostLog> | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadingJobs, setLoadingJobs] = useState(false);
   const [loadingLogs, setLoadingLogs] = useState(false);
@@ -41,12 +46,16 @@ export const AutomationPage: React.FC = () => {
     [channels, selectedChannelId]
   );
 
+  const postLogs = postLogsResp?.results || [];
+
   const fetchChannels = async () => {
     setLoading(true);
     try {
       const data = await api.getChannels();
       setChannels(data);
       if (data.length > 0) setSelectedChannelId((prev) => prev ?? data[0].id);
+    } catch (err: any) {
+      toast.push({ variant: "error", title: t("toast.load_failed"), description: err?.message || t("toast.error_generic") });
     } finally {
       setLoading(false);
     }
@@ -57,16 +66,20 @@ export const AutomationPage: React.FC = () => {
     try {
       const data = await api.getCronJobs(channelId);
       setCronJobs(data);
+    } catch (err: any) {
+      toast.push({ variant: "error", title: t("toast.load_failed"), description: err?.message || t("toast.error_generic") });
     } finally {
       setLoadingJobs(false);
     }
   };
 
-  const fetchPostLogs = async (channelId: number) => {
+  const fetchPostLogs = async (channelId: number, page: number) => {
     setLoadingLogs(true);
     try {
-      const data = await api.getPostLogs(channelId);
-      setPostLogs((data || []).slice(0, 20));
+      const data = await api.getPostLogs(channelId, page, LOGS_PAGE_SIZE);
+      setPostLogsResp(data);
+    } catch (err: any) {
+      toast.push({ variant: "error", title: t("toast.load_failed"), description: err?.message || t("toast.error_generic") });
     } finally {
       setLoadingLogs(false);
     }
@@ -79,8 +92,12 @@ export const AutomationPage: React.FC = () => {
   useEffect(() => {
     if (!selectedChannelId) return;
     fetchCronJobs(selectedChannelId);
-    fetchPostLogs(selectedChannelId);
   }, [selectedChannelId]);
+
+  useEffect(() => {
+    if (!selectedChannelId) return;
+    fetchPostLogs(selectedChannelId, postLogsPage);
+  }, [selectedChannelId, postLogsPage]);
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,7 +112,10 @@ export const AutomationPage: React.FC = () => {
         with_images: withImages,
         status: "active",
       });
+      toast.push({ variant: "success", title: t("toast.saved") });
       fetchCronJobs(selectedChannelId);
+    } catch (err: any) {
+      toast.push({ variant: "error", title: t("toast.save_failed"), description: err?.message || t("toast.error_generic") });
     } finally {
       setSaving(false);
     }
@@ -104,25 +124,43 @@ export const AutomationPage: React.FC = () => {
   const handleDelete = async (jobId: number) => {
     if (!selectedChannelId) return;
     if (!window.confirm(t("automation.delete_confirm"))) return;
-    await api.deleteCronJob(selectedChannelId, jobId);
-    fetchCronJobs(selectedChannelId);
+    try {
+      await api.deleteCronJob(selectedChannelId, jobId);
+      toast.push({ variant: "success", title: t("toast.deleted") });
+      fetchCronJobs(selectedChannelId);
+    } catch (err: any) {
+      toast.push({ variant: "error", title: t("toast.delete_failed"), description: err?.message || t("toast.error_generic") });
+    }
   };
 
   const handleToggle = async (job: CronJob) => {
     if (!selectedChannelId) return;
     const nextStatus = job.status === "active" ? "inactive" : "active";
-    await api.updateCronJob(selectedChannelId, job.id, { status: nextStatus });
-    fetchCronJobs(selectedChannelId);
+    try {
+      await api.updateCronJob(selectedChannelId, job.id, { status: nextStatus });
+      toast.push({ variant: "success", title: t("toast.saved") });
+      fetchCronJobs(selectedChannelId);
+    } catch (err: any) {
+      toast.push({ variant: "error", title: t("toast.save_failed"), description: err?.message || t("toast.error_generic") });
+    }
   };
 
   const handleRunNow = async (job: CronJob) => {
     if (!selectedChannelId) return;
-    const res = await api.runCronJobNow(selectedChannelId, job.id);
-    if (!res.ok) {
-      window.alert(res.detail || "Failed");
+    try {
+      const res = await api.runCronJobNow(selectedChannelId, job.id);
+      if (!res.ok) {
+        toast.push({ variant: "error", title: t("toast.run_failed"), description: res.detail || t("toast.error_generic") });
+      } else {
+        toast.push({ variant: "success", title: t("toast.run_started") });
+      }
+    } catch (err: any) {
+      toast.push({ variant: "error", title: t("toast.run_failed"), description: err?.message || t("toast.error_generic") });
+    } finally {
+      fetchCronJobs(selectedChannelId);
+      setPostLogsPage(1);
+      fetchPostLogs(selectedChannelId, 1);
     }
-    fetchCronJobs(selectedChannelId);
-    fetchPostLogs(selectedChannelId);
   };
 
   return (
@@ -140,7 +178,11 @@ export const AutomationPage: React.FC = () => {
             <select
               className="w-full rounded-xl border border-slate-800 bg-slate-900 px-3 py-2.5 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm"
               value={selectedChannelId || ""}
-              onChange={(e) => setSelectedChannelId(Number(e.target.value))}
+              onChange={(e) => {
+                const id = Number(e.target.value);
+                setSelectedChannelId(id);
+                setPostLogsPage(1);
+              }}
               disabled={loading}
             >
               {channels.map((ch) => (
@@ -162,14 +204,20 @@ export const AutomationPage: React.FC = () => {
           <CardContent className="p-10 text-slate-400">{t("automation.no_channels")}</CardContent>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-          <div className="lg:col-span-2 space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
             <Card className="border-slate-800 bg-slate-900/50 backdrop-blur-sm">
               <CardHeader className="border-b border-slate-800/50">
                 <CardTitle className="text-white">{t("automation.create_title")}</CardTitle>
               </CardHeader>
               <CardContent className="p-6">
-                <form onSubmit={handleCreate} className="space-y-4">
+                {selectedChannel && !selectedChannel.isAdminVerified && (
+                  <div className="mb-4 p-4 rounded-xl border border-amber-500/20 bg-amber-500/10 text-amber-200 text-sm">
+                    {t("automation.admin_warn")}
+                  </div>
+                )}
+
+                <form onSubmit={handleCreate} className="space-y-6">
                   <div>
                     <label className="block text-sm font-medium text-slate-300 mb-2">{t("automation.interval")}</label>
                     <select
@@ -183,39 +231,41 @@ export const AutomationPage: React.FC = () => {
                         </option>
                       ))}
                     </select>
-                    <p className="text-xs text-slate-500 mt-2">
-                      {t("automation.schedule_hint")} <span className="font-mono">{selectedInterval.cron}</span>
-                    </p>
                   </div>
-                  <label className="flex items-center gap-3 text-sm text-slate-300">
-                    <input
-                      type="checkbox"
-                      checked={withImages}
-                      onChange={(e) => setWithImages(e.target.checked)}
-                      className="h-4 w-4 rounded border-slate-700 bg-slate-950 text-indigo-500 focus:ring-indigo-500"
-                    />
-                    {t("automation.with_images")}
-                  </label>
+
+                  <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-slate-950 border border-slate-800">
+                    <div>
+                      <div className="text-sm font-medium text-white">{t("automation.with_images")}</div>
+                      <div className="text-xs text-slate-500 mt-1">{t("automation.images")}: {withImages ? t("automation.yes") : t("automation.no")}</div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setWithImages((v) => !v)}
+                      className={`w-12 h-7 rounded-full border transition-colors relative ${
+                        withImages
+                          ? "bg-indigo-600/80 border-indigo-500/40"
+                          : "bg-slate-800 border-slate-700"
+                      }`}
+                      aria-label={t("automation.with_images")}
+                    >
+                      <span
+                        className={`absolute top-0.5 h-6 w-6 rounded-full bg-white transition-transform ${
+                          withImages ? "translate-x-5" : "translate-x-0.5"
+                        }`}
+                      />
+                    </button>
+                  </div>
 
                   <div className="pt-2 flex justify-end">
-                    <Button type="submit" disabled={saving || !selectedChannelId} className="gap-2">
-                      <Plus size={18} />
-                      {saving ? t("automation.creating") : t("automation.create")}
+                    <Button type="submit" disabled={saving} className="gap-2">
+                      <Plus size={18} /> {saving ? t("automation.creating") : t("automation.create")}
                     </Button>
                   </div>
                 </form>
-
-                {selectedChannel && !selectedChannel.isAdminVerified && (
-                  <div className="mt-5 text-sm text-amber-300 bg-amber-500/10 border border-amber-500/20 rounded-xl p-3">
-                    {t("automation.admin_warn")}
-                  </div>
-                )}
               </CardContent>
             </Card>
-          </div>
 
-          <div className="lg:col-span-3">
-            <Card className="border-slate-800 bg-slate-900/50 backdrop-blur-sm">
+            <Card className="border-slate-800 bg-slate-900/50 backdrop-blur-sm mt-8">
               <CardHeader className="border-b border-slate-800/50 flex flex-row items-center justify-between">
                 <CardTitle className="text-white">{t("automation.jobs_title")}</CardTitle>
                 <Button
@@ -291,7 +341,7 @@ export const AutomationPage: React.FC = () => {
                   variant="ghost"
                   size="sm"
                   className="gap-2"
-                  onClick={() => selectedChannelId && fetchPostLogs(selectedChannelId)}
+                  onClick={() => selectedChannelId && fetchPostLogs(selectedChannelId, postLogsPage)}
                   disabled={!selectedChannelId || loadingLogs}
                 >
                   <RefreshCw size={16} className={loadingLogs ? "animate-spin" : ""} />
@@ -308,12 +358,9 @@ export const AutomationPage: React.FC = () => {
                     {postLogs.map((log) => (
                       <div key={log.id} className="p-6 flex items-start justify-between gap-6">
                         <div className="min-w-0">
-                          <div className="text-white font-semibold truncate">
-                            {log.topic || t("automation.auto_topic")}
-                          </div>
+                          <div className="text-white font-semibold truncate">{log.topic || t("automation.auto_topic")}</div>
                           <div className="text-sm text-slate-400 mt-1">
-                            <span className="text-slate-500">{t("automation.status")}:</span>{" "}
-                            {log.status}
+                            <span className="text-slate-500">{t("automation.status")}:</span> {log.status}
                           </div>
                           <div className="text-sm text-slate-400 mt-1">
                             <span className="text-slate-500">{t("automation.time")}:</span>{" "}
@@ -338,6 +385,31 @@ export const AutomationPage: React.FC = () => {
                     ))}
                   </div>
                 )}
+
+                {postLogsResp && (
+                  <PaginationControls
+                    page={postLogsPage}
+                    pageSize={LOGS_PAGE_SIZE}
+                    count={postLogsResp.count}
+                    hasPrev={!!postLogsResp.previous}
+                    hasNext={!!postLogsResp.next}
+                    onPrev={() => setPostLogsPage((p) => Math.max(1, p - 1))}
+                    onNext={() => setPostLogsPage((p) => p + 1)}
+                  />
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          <div>
+            <Card className="border-slate-800 bg-slate-900/50 backdrop-blur-sm">
+              <CardHeader className="border-b border-slate-800/50">
+                <CardTitle className="text-white">{t("dashboard.analytics")}</CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <div className="text-sm text-slate-400">
+                  {t("automation.desc")}
+                </div>
               </CardContent>
             </Card>
           </div>

@@ -16,54 +16,54 @@ export const LandingPage: React.FC = () => {
 
   const plans = [
     {
-      name: "Free",
-      price: "$0",
-      period: "/mo",
-      desc: "Boshlang'ich loyihalar uchun",
+      name: t('pricing.free_name'),
+      price: '$0',
+      period: t('pricing.period_month'),
+      desc: t('pricing.free_desc'),
       icon: Shield,
-      color: "text-slate-400",
-      bg: "bg-slate-800",
-      features: ["1 ta kanal", "Kuniga 5 ta post", "Oddiy AI model", "Asosiy analitika"],
-      button: "Boshlash",
-      variant: "outline" as const,
+      color: 'text-slate-400',
+      bg: 'bg-slate-800',
+      features: [t('pricing.free_f1'), t('pricing.free_f2'), t('pricing.free_f3'), t('pricing.free_f4')],
+      button: t('pricing.free_btn'),
+      variant: 'outline' as const,
     },
     {
-      name: "Pro",
-      price: "$9.99",
-      period: "/mo",
-      desc: "Faol rivojlanayotgan kanallar uchun",
+      name: t('pricing.pro_name'),
+      price: '$9.99',
+      period: t('pricing.period_month'),
+      desc: t('pricing.pro_desc'),
       icon: Zap,
-      color: "text-indigo-400",
-      bg: "bg-indigo-500/20",
+      color: 'text-indigo-400',
+      bg: 'bg-indigo-500/20',
       popular: true,
-      features: ["10 ta kanal", "Cheksiz postlar", "GPT-4 & Gemini Pro", "Batafsil analitika", "Prioritet yordam"],
-      button: "Pro ga o'tish",
-      variant: "default" as const,
+      features: [t('pricing.pro_f1'), t('pricing.pro_f2'), t('pricing.pro_f3'), t('pricing.pro_f4'), t('pricing.pro_f5')],
+      button: t('pricing.pro_btn'),
+      variant: 'default' as const,
     },
     {
-      name: "Max",
-      price: "$29.99",
-      period: "/mo",
-      desc: "Katta agentliklar va bizneslar uchun",
+      name: t('pricing.max_name'),
+      price: '$29.99',
+      period: t('pricing.period_month'),
+      desc: t('pricing.max_desc'),
       icon: Star,
-      color: "text-amber-400",
-      bg: "bg-amber-500/20",
-      features: ["Cheksiz kanallar", "Cheksiz postlar", "Barcha AI modellar", "API orqali ulanish", "Shaxsiy menejer"],
-      button: "Max ga o'tish",
-      variant: "outline" as const,
-    }
+      color: 'text-amber-400',
+      bg: 'bg-amber-500/20',
+      features: [t('pricing.max_f1'), t('pricing.max_f2'), t('pricing.max_f3'), t('pricing.max_f4'), t('pricing.max_f5')],
+      button: t('pricing.max_btn'),
+      variant: 'outline' as const,
+    },
   ];
 
   const faqs = [
-    { q: "AI Poster qanday ishlaydi?", a: "AI Poster sizning Telegram kanalingizga ulanadi va belgilangan mavzular asosida avtomatik ravishda postlar yaratib, ularni e'lon qiladi." },
-    { q: "Xavfsizlik qanday ta'minlanadi?", a: "Biz sizning ma'lumotlaringizni shifrlangan holda saqlaymiz. Bot faqat post yozish huquqiga ega bo'ladi, boshqa huquqlar talab qilinmaydi." },
-    { q: "Boshqa tillarda post yoza oladimi?", a: "Ha, AI modellarimiz 50 dan ortiq tillarda, jumladan o'zbek, rus va ingliz tillarida mukammal yoza oladi." },
-    { q: "To'lovni qanday amalga oshiraman?", a: "Hozirda Visa, Mastercard va mahalliy to'lov tizimlari (Payme, Click) orqali to'lovlarni qabul qilamiz." }
+    { q: t('home.faq_1_q'), a: t('home.faq_1_a') },
+    { q: t('home.faq_2_q'), a: t('home.faq_2_a') },
+    { q: t('home.faq_3_q'), a: t('home.faq_3_a') },
+    { q: t('home.faq_4_q'), a: t('home.faq_4_a') },
   ];
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-indigo-500/30">
-      <SEO title="Home" />
+      <SEO title={t("home.seo_title")} />
       
       {/* Navbar */}
       <nav className="border-b border-slate-800/50 bg-slate-950/80 backdrop-blur-xl sticky top-0 z-50">
@@ -108,7 +108,7 @@ export const LandingPage: React.FC = () => {
         <div className="relative z-10 w-full">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 text-indigo-300 text-sm font-bold tracking-wide mb-6 border border-indigo-500/20 backdrop-blur-sm">
             <span className="flex h-2 w-2 rounded-full bg-indigo-500 animate-pulse shadow-[0_0_8px_rgba(99,102,241,0.8)]"></span>
-            {t('app_name')} 2.0 IS LIVE
+            {t('home.badge', { app: t('app_name') })}
           </div>
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-6 leading-[1.1]">
             {t('home.title').split('AI').map((part, i, arr) => (
@@ -204,7 +204,7 @@ export const LandingPage: React.FC = () => {
               <div key={i} className={`relative p-8 rounded-3xl bg-slate-950 border ${plan.popular ? 'border-indigo-500 shadow-2xl shadow-indigo-500/20 scale-105 z-10' : 'border-slate-800'} flex flex-col`}>
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-indigo-500 text-white text-xs font-bold uppercase tracking-wider rounded-full shadow-lg shadow-indigo-500/30">
-                    Eng mashhur
+                    {t("pricing.popular")}
                   </div>
                 )}
                 <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 ${plan.bg} ${plan.color}`}>

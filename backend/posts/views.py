@@ -3,9 +3,11 @@ from rest_framework.permissions import IsAuthenticated
 
 from .models import Post
 from .serializers import PostSerializer
+from .pagination import StandardResultsSetPagination
 
 
 class PostViewSet(viewsets.ReadOnlyModelViewSet):
+    pagination_class = StandardResultsSetPagination
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
 

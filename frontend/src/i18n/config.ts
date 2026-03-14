@@ -39,7 +39,17 @@ const resources = {
         "nav_how": "Qanday ishlaydi",
         "nav_pricing": "Narxlar",
         "nav_faq": "FAQ",
-        "nav_contact": "Aloqa"
+        "nav_contact": "Aloqa",
+        "seo_title": "Bosh sahifa",
+        "badge": "{{app}} 2.0 IS LIVE",
+        "faq_1_q": "AI Poster qanday ishlaydi?",
+        "faq_1_a": "AI Poster sizning Telegram kanalingizga ulanadi va belgilangan mavzular asosida avtomatik ravishda postlar yaratib, ularni e'lon qiladi.",
+        "faq_2_q": "Xavfsizlik qanday ta'minlanadi?",
+        "faq_2_a": "Biz sizning ma'lumotlaringizni shifrlangan holda saqlaymiz. Bot faqat post yozish huquqiga ega bo'ladi, boshqa huquqlar talab qilinmaydi.",
+        "faq_3_q": "Boshqa tillarda post yoza oladimi?",
+        "faq_3_a": "Ha, AI modellarimiz 50 dan ortiq tillarda, jumladan o'zbek, rus va ingliz tillarida mukammal yoza oladi.",
+        "faq_4_q": "To'lovni qanday amalga oshiraman?",
+        "faq_4_a": "Hozirda Visa, Mastercard va mahalliy to'lov tizimlari (Payme, Click) orqali to'lovlarni qabul qilamiz."
       },
       "auth": {
         "welcome": "Xush kelibsiz",
@@ -105,15 +115,16 @@ const resources = {
         "loading": "Yuklanmoqda...",
         "empty": "Hozircha jadval yo'q.",
         "next_run": "Keyingi run",
-        "run_now": "Run now",
+        "run_now": "Hozir ishga tushirish",
         "status": "Holat",
         "time": "Vaqt",
-        "active": "Active",
-        "inactive": "Inactive",
+        "active": "Faol",
+        "inactive": "Nofaol",
         "delete": "O'chirish",
         "delete_confirm": "Ushbu jadvalni o'chirmoqchimisiz?",
-        "admin_warn": "Eslatma: bot adminligi tasdiqlanmagan kanal uchun postlar yuborilmasligi mumkin."
-      },
+        "admin_warn": "Eslatma: bot adminligi tasdiqlanmagan kanal uchun postlar yuborilmasligi mumkin.",
+
+},
       "posts": {
         "desc": "AI yaratgan postlar bazasi (kategoriya va tarix bilan).",
         "no_channels": "Postlarni ko'rish uchun avval kamida bitta kanal qo'shing.",
@@ -132,7 +143,20 @@ const resources = {
         "name": "Ism",
         "new_password": "Yangi parol",
         "save": "Saqlash",
-        "saving": "Saqlanmoqda..."
+        "saving": "Saqlanmoqda...",
+        "name_placeholder": "Masalan: Javohir",
+        "email_locked": "Emailni o'zgartirib bo'lmaydi",
+        "password": "Parol",
+        "update_password": "Parolni yangilash",
+        "current_password": "Hozirgi parol",
+        "confirm_password": "Yangi parol (takror)",
+        "security": "Xavfsizlik",
+        "2fa": "Ikki bosqichli autentifikatsiya",
+        "sessions": "Faol seanslar",
+        "coming_soon": "Tez kunda",
+        "enable": "Yoqish",
+        "view": "Ko'rish"
+
       },
       "channel": {
         "add_new": "Yangi Kanal",
@@ -156,16 +180,102 @@ const resources = {
         "cancel": "Bekor qilish",
         "save": "Saqlash",
         "verified_success": "Bot muvaffaqiyatli admin qilindi!",
-        "verify_error": "Bot kanalda admin emas. Iltimos, botni admin qilib qayta tekshiring."
-      },
+        "verify_error": "Bot kanalda admin emas. Iltimos, botni admin qilib qayta tekshiring.",
+        "custom_prompt_placeholder": "Post yozish uchun maxsus ko'rsatmalar...",
+        "select_model": "Model tanlang",
+        "admin": "Admin",
+        "verified": "Tasdiqlangan"
+},
       "analytics": {
         "select_channel": "Kanalni tanlang",
         "posts_today": "Bugungi postlar",
         "subs_gained": "Yangi obunachilar",
         "tokens_used": "Ishlatilgan AI Tokenlar",
-        "last_post": "So'nggi post vaqti"
-      }
-    }
+        "last_post": "So'nggi post vaqti",
+        "top_categories": "Top kategoriyalar",
+        "recent_errors": "So'nggi xatoliklar",
+        "no_errors": "Xatoliklar yo'q"
+
+      },
+      "common": {
+        "loading": "Yuklanmoqda..."
+      },
+      "pagination": {
+        "prev": "Oldingi",
+        "next": "Keyingi",
+        "page_of": "Sahifa {{page}} / {{total}}",
+        "total": "Jami: {{count}}"
+      },
+      "toast": {
+        "error_generic": "Xatolik yuz berdi",
+        "login_success": "Muvaffaqiyatli kirdingiz",
+        "login_failed": "Kirish muvaffaqiyatsiz",
+        "register_success": "Ro'yxatdan o'tildi",
+        "register_failed": "Ro'yxatdan o'tish muvaffaqiyatsiz",
+        "profile_saved": "Profil saqlandi",
+        "save_failed": "Saqlashda xatolik",
+        "delete_failed": "O'chirishda xatolik",
+        "saved": "Saqlandi",
+        "deleted": "O'chirildi",
+        "run_started": "Ishga tushirildi",
+        "run_failed": "Run xatolik",
+        "channel_created": "Kanal qo'shildi",
+        "channel_updated": "Kanal yangilandi",
+        "channel_deleted": "Kanal o'chirildi",
+        "channel_verified": "Adminlik tasdiqlandi",
+        "verify_failed": "Tekshiruv xatoligi",
+        "password_mismatch": "Parollar mos emas",
+        "password_updated": "Parol yangilandi",
+        "password_update_failed": "Parolni yangilashda xatolik",
+        "load_failed": "Yuklashda xatolik"
+      },
+      "footer": {
+        "copyright": "© AI Poster. Barcha huquqlar himoyalangan.",
+        "note": "Telegram uchun AI autoposting platformasi."
+      },
+      "header": {
+        "notifications": "Xabarnomalar",
+        "mark_all_read": "Barchasini o'qish",
+        "no_notifications": "Hozircha yangi xabarlar yo'q",
+        "pro_plan": "Pro Tarif",
+        "user_fallback": "Foydalanuvchi"
+      },
+      "sidebar": {
+        "pro_title": "Pro Tarif",
+        "pro_desc": "Cheksiz imkoniyatlar",
+        "limit_used": "{{pct}}% limit ishlatildi"
+      },
+      "pricing": {
+        "badge": "Tariflar",
+        "subtitle": "O'zingizga mos tarifni tanlang va imkoniyatlaringizni kengaytiring.",
+        "popular": "Eng mashhur",
+        "free_name": "Free",
+        "free_desc": "Boshlang'ich loyihalar uchun",
+        "free_btn": "Boshlash",
+        "free_btn_current": "Joriy reja",
+        "free_f1": "1 ta kanal",
+        "free_f2": "Kuniga 5 ta post",
+        "free_f3": "Oddiy AI model",
+        "free_f4": "Asosiy analitika",
+        "pro_name": "Pro",
+        "pro_desc": "Faol rivojlanayotgan kanallar uchun",
+        "pro_btn": "Pro ga o'tish",
+        "pro_f1": "10 ta kanal",
+        "pro_f2": "Cheksiz postlar",
+        "pro_f3": "GPT-4 & Gemini Pro",
+        "pro_f4": "Batafsil analitika",
+        "pro_f5": "Prioritet yordam",
+        "max_name": "Max",
+        "max_desc": "Katta agentliklar va bizneslar uchun",
+        "max_btn": "Max ga o'tish",
+        "max_f1": "Cheksiz kanallar",
+        "max_f2": "Cheksiz postlar",
+        "max_f3": "Barcha AI modellar",
+        "max_f4": "API orqali ulanish",
+        "max_f5": "Shaxsiy menejer",
+        "period_month": "/oy"
+}
+}
   },
   ru: {
     translation: {
@@ -204,7 +314,17 @@ const resources = {
         "nav_how": "Как работает",
         "nav_pricing": "Цены",
         "nav_faq": "FAQ",
-        "nav_contact": "Контакты"
+        "nav_contact": "Контакты",
+        "seo_title": "Главная",
+        "badge": "{{app}} 2.0 IS LIVE",
+        "faq_1_q": "Как работает AI Poster?",
+        "faq_1_a": "AI Poster подключается к вашему Telegram-каналу и автоматически создает и публикует посты по заданным темам.",
+        "faq_2_q": "Как обеспечивается безопасность?",
+        "faq_2_a": "Мы храним данные в зашифрованном виде. Боту нужны только права на публикацию.",
+        "faq_3_q": "Пишет ли он на разных языках?",
+        "faq_3_a": "Да, модели ИИ поддерживают десятки языков, включая узбекский, русский и английский.",
+        "faq_4_q": "Как оплатить?",
+        "faq_4_a": "Поддерживаем Visa, Mastercard и локальные платежные системы."
       },
       "auth": {
         "welcome": "Добро пожаловать",
@@ -273,12 +393,13 @@ const resources = {
         "run_now": "Запустить",
         "status": "Статус",
         "time": "Время",
-        "active": "Active",
-        "inactive": "Inactive",
+        "active": "Активно",
+        "inactive": "Неактивно",
         "delete": "Удалить",
         "delete_confirm": "Удалить это расписание?",
-        "admin_warn": "Примечание: если права бота не подтверждены, публикация может не работать."
-      },
+        "admin_warn": "Примечание: если права бота не подтверждены, публикация может не работать.",
+
+},
       "posts": {
         "desc": "База опубликованных постов (с категорией и историей).",
         "no_channels": "Чтобы увидеть посты, сначала добавьте хотя бы один канал.",
@@ -297,7 +418,20 @@ const resources = {
         "name": "Имя",
         "new_password": "Новый пароль",
         "save": "Сохранить",
-        "saving": "Сохранение..."
+        "saving": "Сохранение...",
+        "name_placeholder": "Например: Javohir",
+        "email_locked": "Email нельзя изменить",
+        "password": "Пароль",
+        "update_password": "Обновить пароль",
+        "current_password": "Текущий пароль",
+        "confirm_password": "Повторите пароль",
+        "security": "Безопасность",
+        "2fa": "Двухфакторная аутентификация",
+        "sessions": "Активные сессии",
+        "coming_soon": "Скоро",
+        "enable": "Включить",
+        "view": "Посмотреть"
+
       },
       "channel": {
         "add_new": "Новый канал",
@@ -321,16 +455,102 @@ const resources = {
         "cancel": "Отмена",
         "save": "Сохранить",
         "verified_success": "Бот успешно назначен администратором!",
-        "verify_error": "Бот не является администратором. Пожалуйста, назначьте бота админом и проверьте снова."
-      },
+        "verify_error": "Бот не является администратором. Пожалуйста, назначьте бота админом и проверьте снова.",
+        "custom_prompt_placeholder": "Специальные инструкции для поста...",
+        "select_model": "Выберите модель",
+        "admin": "Админ",
+        "verified": "Подтверждено"
+},
       "analytics": {
         "select_channel": "Выберите канал",
         "posts_today": "Посты сегодня",
         "subs_gained": "Новые подписчики",
         "tokens_used": "Использовано ИИ токенов",
-        "last_post": "Время последнего поста"
-      }
-    }
+        "last_post": "Время последнего поста",
+        "top_categories": "Топ категории",
+        "recent_errors": "Последние ошибки",
+        "no_errors": "Ошибок нет"
+
+      },
+      "common": {
+        "loading": "Загрузка..."
+      },
+      "pagination": {
+        "prev": "Назад",
+        "next": "Вперед",
+        "page_of": "Страница {{page}} из {{total}}",
+        "total": "Всего: {{count}}"
+      },
+      "toast": {
+        "error_generic": "Произошла ошибка",
+        "login_success": "Вы вошли в систему",
+        "login_failed": "Ошибка входа",
+        "register_success": "Аккаунт создан",
+        "register_failed": "Ошибка регистрации",
+        "profile_saved": "Профиль сохранен",
+        "save_failed": "Ошибка сохранения",
+        "delete_failed": "Ошибка удаления",
+        "saved": "Сохранено",
+        "deleted": "Удалено",
+        "run_started": "Запуск выполнен",
+        "run_failed": "Ошибка запуска",
+        "channel_created": "Канал добавлен",
+        "channel_updated": "Канал обновлен",
+        "channel_deleted": "Канал удален",
+        "channel_verified": "Права подтверждены",
+        "verify_failed": "Ошибка проверки",
+        "password_mismatch": "Пароли не совпадают",
+        "password_updated": "Пароль обновлен",
+        "password_update_failed": "Ошибка обновления пароля",
+        "load_failed": "Ошибка загрузки"
+      },
+      "footer": {
+        "copyright": "© AI Poster. Все права защищены.",
+        "note": "Платформа автопостинга в Telegram с ИИ."
+      },
+      "header": {
+        "notifications": "Уведомления",
+        "mark_all_read": "Отметить все",
+        "no_notifications": "Пока нет уведомлений",
+        "pro_plan": "Pro тариф",
+        "user_fallback": "Пользователь"
+      },
+      "sidebar": {
+        "pro_title": "Pro тариф",
+        "pro_desc": "Безлимитные возможности",
+        "limit_used": "{{pct}}% лимита использовано"
+      },
+      "pricing": {
+        "badge": "Тарифы",
+        "subtitle": "Выберите подходящий тариф и расширьте возможности.",
+        "popular": "Самый популярный",
+        "free_name": "Free",
+        "free_desc": "Для стартовых проектов",
+        "free_btn": "Начать",
+        "free_btn_current": "Текущий план",
+        "free_f1": "1 канал",
+        "free_f2": "5 постов в день",
+        "free_f3": "Базовая ИИ модель",
+        "free_f4": "Базовая аналитика",
+        "pro_name": "Pro",
+        "pro_desc": "Для активно растущих каналов",
+        "pro_btn": "Перейти на Pro",
+        "pro_f1": "10 каналов",
+        "pro_f2": "Безлимитные посты",
+        "pro_f3": "GPT-4 & Gemini Pro",
+        "pro_f4": "Расширенная аналитика",
+        "pro_f5": "Приоритетная поддержка",
+        "max_name": "Max",
+        "max_desc": "Для агентств и бизнеса",
+        "max_btn": "Перейти на Max",
+        "max_f1": "Безлимитные каналы",
+        "max_f2": "Безлимитные посты",
+        "max_f3": "Все ИИ модели",
+        "max_f4": "Доступ по API",
+        "max_f5": "Персональный менеджер",
+        "period_month": "/мес"
+}
+}
   },
   en: {
     translation: {
@@ -369,7 +589,17 @@ const resources = {
         "nav_how": "How it works",
         "nav_pricing": "Pricing",
         "nav_faq": "FAQ",
-        "nav_contact": "Contact"
+        "nav_contact": "Contact",
+        "seo_title": "Home",
+        "badge": "{{app}} 2.0 IS LIVE",
+        "faq_1_q": "How does AI Poster work?",
+        "faq_1_a": "AI Poster connects to your Telegram channel and automatically generates and publishes posts based on your settings.",
+        "faq_2_q": "How is security handled?",
+        "faq_2_a": "We store data securely. The bot only needs posting permissions.",
+        "faq_3_q": "Can it write in multiple languages?",
+        "faq_3_a": "Yes, our AI models support many languages including Uzbek, Russian, and English.",
+        "faq_4_q": "How do I pay?",
+        "faq_4_a": "We support major cards and local payment providers."
       },
       "auth": {
         "welcome": "Welcome back",
@@ -441,15 +671,29 @@ const resources = {
         "inactive": "Inactive",
         "delete": "Delete",
         "delete_confirm": "Delete this schedule?",
-        "admin_warn": "Note: posting may not work until bot admin rights are verified."
-      },
+        "admin_warn": "Note: posting may not work until bot admin rights are verified.",
+
+},
       "settings": {
         "desc": "Manage your personal information and security settings.",
         "profile": "Profile Information",
         "name": "Name",
         "new_password": "New Password",
         "save": "Save Changes",
-        "saving": "Saving..."
+        "saving": "Saving...",
+        "name_placeholder": "John Doe",
+        "email_locked": "Email cannot be changed",
+        "password": "Password",
+        "update_password": "Update password",
+        "current_password": "Current password",
+        "confirm_password": "Confirm password",
+        "security": "Security",
+        "2fa": "Two-factor authentication",
+        "sessions": "Active sessions",
+        "coming_soon": "Coming soon",
+        "enable": "Enable",
+        "view": "View"
+
       },
       "channel": {
         "add_new": "New Channel",
@@ -473,16 +717,102 @@ const resources = {
         "cancel": "Cancel",
         "save": "Save",
         "verified_success": "Bot successfully verified as admin!",
-        "verify_error": "Bot is not an admin. Please make the bot an admin and try again."
-      },
+        "verify_error": "Bot is not an admin. Please make the bot an admin and try again.",
+        "custom_prompt_placeholder": "Custom instructions for post writing...",
+        "select_model": "Select model",
+        "admin": "Admin",
+        "verified": "Verified"
+},
       "analytics": {
         "select_channel": "Select a channel",
         "posts_today": "Posts Today",
         "subs_gained": "Subscribers Gained",
         "tokens_used": "AI Tokens Used",
-        "last_post": "Last Post Time"
-      }
-    }
+        "last_post": "Last Post Time",
+        "top_categories": "Top categories",
+        "recent_errors": "Recent errors",
+        "no_errors": "No errors"
+
+      },
+      "common": {
+        "loading": "Loading..."
+      },
+      "pagination": {
+        "prev": "Prev",
+        "next": "Next",
+        "page_of": "Page {{page}} of {{total}}",
+        "total": "Total: {{count}}"
+      },
+      "toast": {
+        "error_generic": "Something went wrong",
+        "login_success": "Logged in",
+        "login_failed": "Login failed",
+        "register_success": "Account created",
+        "register_failed": "Registration failed",
+        "profile_saved": "Profile saved",
+        "save_failed": "Save failed",
+        "delete_failed": "Delete failed",
+        "saved": "Saved",
+        "deleted": "Deleted",
+        "run_started": "Run triggered",
+        "run_failed": "Run failed",
+        "channel_created": "Channel created",
+        "channel_updated": "Channel updated",
+        "channel_deleted": "Channel deleted",
+        "channel_verified": "Admin verified",
+        "verify_failed": "Verification failed",
+        "password_mismatch": "Passwords do not match",
+        "password_updated": "Password updated",
+        "password_update_failed": "Password update failed",
+        "load_failed": "Load failed"
+      },
+      "footer": {
+        "copyright": "© AI Poster. All rights reserved.",
+        "note": "AI autoposting platform for Telegram."
+      },
+      "header": {
+        "notifications": "Notifications",
+        "mark_all_read": "Mark all read",
+        "no_notifications": "No new notifications",
+        "pro_plan": "Pro plan",
+        "user_fallback": "User"
+      },
+      "sidebar": {
+        "pro_title": "Pro plan",
+        "pro_desc": "Unlimited features",
+        "limit_used": "{{pct}}% of limit used"
+      },
+      "pricing": {
+        "badge": "Pricing",
+        "subtitle": "Choose a plan that fits you and unlock more features.",
+        "popular": "Most popular",
+        "free_name": "Free",
+        "free_desc": "For early-stage projects",
+        "free_btn": "Get started",
+        "free_btn_current": "Current plan",
+        "free_f1": "1 channel",
+        "free_f2": "5 posts/day",
+        "free_f3": "Basic AI model",
+        "free_f4": "Basic analytics",
+        "pro_name": "Pro",
+        "pro_desc": "For growing channels",
+        "pro_btn": "Upgrade to Pro",
+        "pro_f1": "10 channels",
+        "pro_f2": "Unlimited posts",
+        "pro_f3": "GPT-4 & Gemini Pro",
+        "pro_f4": "Advanced analytics",
+        "pro_f5": "Priority support",
+        "max_name": "Max",
+        "max_desc": "For agencies and businesses",
+        "max_btn": "Upgrade to Max",
+        "max_f1": "Unlimited channels",
+        "max_f2": "Unlimited posts",
+        "max_f3": "All AI models",
+        "max_f4": "API access",
+        "max_f5": "Dedicated manager",
+        "period_month": "/mo"
+}
+}
   }
 };
 

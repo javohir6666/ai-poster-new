@@ -7,12 +7,14 @@ import { Input } from "../../components/ui/Input";
 import { Card, CardContent } from "../../components/ui/Card";
 import { useTranslation } from "react-i18next";
 import { SEO } from "../../components/seo/SEO";
+import { useToast } from "../../context/ToastContext";
 
 export const ChannelsPage: React.FC = () => {
   const [channels, setChannels] = useState<Channel[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { t } = useTranslation();
+  const toast = useToast();
 
   // Modal states
   const [channelUsername, setChannelUsername] = useState("");
@@ -33,7 +35,8 @@ export const ChannelsPage: React.FC = () => {
       const data = await api.getChannels();
       setChannels(data);
     } catch (error) {
-      console.error("Failed to fetch channels:", error);
+      const msg = (error as any)?.message || t("toast.error_generic");
+      toast.push({ variant: "error", title: t("toast.load_failed"), description: msg });
     } finally {
       setLoading(false);
     }
@@ -52,7 +55,7 @@ export const ChannelsPage: React.FC = () => {
           setAiModelId(models[0].id);
         }
       } catch (e) {
-        console.error('Failed to load AI models', e);
+        toast.push({ variant: "error", title: t("toast.load_failed"), description: (e as any)?.message || t("toast.error_generic") });
       }
     })();
   }, []);
@@ -76,13 +79,16 @@ export const ChannelsPage: React.FC = () => {
           setChannelName((prev) => prev || res.channelName || channelUsername);
         }
         setVerifyMessage(t('channel.verified_success'));
+        toast.push({ variant: "success", title: t("toast.channel_verified") });
       } else {
         setVerifyStatus("error");
         setVerifyMessage(res.message || t('channel.verify_error'));
+        toast.push({ variant: "error", title: t("toast.verify_failed"), description: res.message || t("channel.verify_error") });
       }
     } catch (error: any) {
       setVerifyStatus("error");
       setVerifyMessage(error.message || t('channel.verify_error'));
+      toast.push({ variant: "error", title: t("toast.verify_failed"), description: error.message || t("channel.verify_error") });
     } finally {
       setIsVerifying(false);
     }
@@ -116,7 +122,8 @@ export const ChannelsPage: React.FC = () => {
       closeModal();
       fetchChannels();
     } catch (error) {
-      console.error("Failed to save channel:", error);
+      const msg = (error as any)?.message || t("toast.error_generic");
+      toast.push({ variant: "error", title: t("toast.save_failed"), description: msg });
     }
   };
 
@@ -138,7 +145,8 @@ export const ChannelsPage: React.FC = () => {
       await api.deleteChannel(id);
       fetchChannels();
     } catch (error) {
-      console.error("Failed to delete channel:", error);
+      const msg = (error as any)?.message || t("toast.error_generic");
+      toast.push({ variant: "error", title: t("toast.delete_failed"), description: msg });
     }
   };
 
@@ -210,9 +218,9 @@ export const ChannelsPage: React.FC = () => {
                     <span className="font-medium text-slate-300">{channel.aiModel}</span>
                   </div>
                   <div className="flex justify-between pb-1 pt-1">
-                    <span className="text-slate-500">Admin:</span>
+                    <span className="text-slate-500">{t('channel.admin')}:</span>
                     <span className="font-medium text-emerald-400 flex items-center gap-1">
-                      <CheckCircle2 size={14} /> Verified
+                      <CheckCircle2 size={14} /> {t('channel.verified')}
                     </span>
                   </div>
                 </div>
@@ -310,7 +318,7 @@ export const ChannelsPage: React.FC = () => {
                         </>
                       ) : (
                         <>
-                          <option value="">— select model —</option>
+                          <option value="">{t('channel.select_model')}</option>
                           {aiModels.map((m) => (
                             <option key={m.id} value={m.id}>{m.name}</option>
                           ))}
@@ -324,7 +332,7 @@ export const ChannelsPage: React.FC = () => {
                       className="w-full rounded-xl border border-slate-800 bg-slate-950 px-3 py-3 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 min-h-[100px] resize-none"
                       value={customPrompt}
                       onChange={(e) => setCustomPrompt(e.target.value)}
-                      placeholder="Post yozish uchun maxsus ko'rsatmalar..."
+                      placeholder={t('channel.custom_prompt_placeholder')}
                       disabled={verifyStatus !== "success"}
                     />
                   </div>

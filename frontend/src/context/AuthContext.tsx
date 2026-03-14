@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { User } from "../types";
 
 interface AuthContextType {
@@ -7,6 +7,7 @@ interface AuthContextType {
   refresh: string | null;
   login: (access: string, refresh: string | undefined, user: User) => void;
   logout: () => void;
+  updateUser: (patch: Partial<User>) => void;
   isAuthenticated: boolean;
 }
 
@@ -46,11 +47,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
   };
 
-  return (
-    <AuthContext.Provider value={{ user, token, refresh, login, logout, isAuthenticated: !!token }}>
-      {children}
-    </AuthContext.Provider>
+  const updateUser = (patch: Partial<User>) => {
+    setUser((prev) => {
+      const next = { ...(prev || ({} as User)), ...patch };
+      localStorage.setItem("user", JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const value = useMemo(
+    () => ({ user, token, refresh, login, logout, updateUser, isAuthenticated: !!token }),
+    [user, token, refresh]
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {
