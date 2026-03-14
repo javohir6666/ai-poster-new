@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.sqlite3
+
+# Virtualenv
+backend/venv/
+.venv/
+
+# Django media/static (local)
+backend/media/
+backend/staticfiles/
+
+# Env files
+backend/.env
+.env
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# Logs
+*.log
+
+# Celery filesystem transport (dev)
+backend/tmp/
